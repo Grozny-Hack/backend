@@ -2,7 +2,7 @@ from enum import StrEnum
 from typing import Self
 
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import TEXT, VARCHAR
+from sqlalchemy.dialects.postgresql import TEXT, VARCHAR, INTEGER
 
 from vizme.db.connection import db_session
 from vizme.models import BaseModel
@@ -19,6 +19,9 @@ class User(BaseModel):
     email = sa.Column("email", VARCHAR(254), nullable=False)
     picture_url = sa.Column("picture_url", TEXT, nullable=True)
     hashed_password = sa.Column("hashed_password", TEXT, nullable=True)
+    address = sa.Column("address", TEXT, nullable=True)
+    phone = sa.Column("phone", VARCHAR(16), nullable=True)
+    ip_or_ur_face = sa.Column("ip_or_ur_face", INTEGER, nullable=True)
 
     @classmethod
     async def create(cls, email: str, hashed_password: str):
@@ -48,11 +51,14 @@ class User(BaseModel):
         return result.scalar_one()
 
     @classmethod
-    async def update(cls, first_name: str = None, last_name: str = None, picture_url: str = None):
-        query = sa.update(cls).values(
+    async def update(cls, user_id: str, first_name: str = None, last_name: str = None, picture_url: str = None, address: str = None, phone: str = None, ip_or_ur_face: int = None):
+        query = sa.update(cls).where(cls.id==user_id).values(
             first_name=first_name,
             last_name=last_name,
             picture_url=picture_url,
+            address=address,
+            phone=phone,
+            ip_or_ur_face=ip_or_ur_face
         )
         await db_session.get().execute(query)
 

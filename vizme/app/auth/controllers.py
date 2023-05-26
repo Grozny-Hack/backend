@@ -95,5 +95,8 @@ class AuthorizationController(ApiController):
                 first_name=body.first_name or user.first_name,
                 last_name=body.last_name or user.last_name,
                 picture_url=body.picture_url or user.picture_url,
+                address=body.address,
+                phone=body.phone,
+                ip_or_ur_face=body.ip_or_ur_face
             )
             return Response(payload=UserProfileView.from_orm(user))
