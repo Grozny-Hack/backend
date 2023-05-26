@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    networks:
+      - vizme
+  web:
+    build: .
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - vizme
+    volumes:
+      - .:/app
+
+volumes:
+  postgres_data:
+networks:
+  vizme:
